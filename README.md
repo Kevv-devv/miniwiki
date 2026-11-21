@@ -22,7 +22,28 @@
 ## Screenshots
 
 <!-- SCREENSHOT-GALLERY-START -->
-Real screenshots will appear here after you run the [screenshot capture instructions](docs/SCREENSHOTS.md) against a **disposable demo wiki**. No placeholder or fabricated UI images are included.
+
+### MiniWiki in action
+
+![MiniWiki home page](docs/images/wiki-home.png)
+
+<details>
+<summary><strong>View more screenshots</strong></summary>
+
+### Main page — Additional view
+
+![Additional view of MiniWiki](docs/images/wiki-home-alt.png)
+
+### Page directory
+
+![MiniWiki All Pages](docs/images/all-pages.png)
+
+### Search
+
+![MiniWiki Search](docs/images/search.png)
+
+</details>
+
 <!-- SCREENSHOT-GALLERY-END -->
 
 ## Download and run (no Go required)
