@@ -1,0 +1,4 @@
+{{define "content"}}
+<h1>All Pages</h1>
+{{if .Pages}}<ul class="page-list">{{range .Pages}}<li><a href="/wiki/{{.Slug}}">{{.Title}}</a><span class="muted"> updated {{.UpdatedAt}}</span></li>{{end}}</ul>{{else}}<p>No pages yet.</p>{{end}}
+{{end}}{{template "base" .}}

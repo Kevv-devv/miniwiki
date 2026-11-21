@@ -1,0 +1,15 @@
+{{define "content"}}
+<h1>Recent Changes</h1>
+<table>
+  <tr><th>When</th><th>Page</th><th>User</th><th>Summary</th><th>Actions</th></tr>
+  {{range .Revisions}}
+  <tr>
+    <td>{{.CreatedAt}}</td>
+    <td><a href="/wiki/{{.Slug}}">{{.Title}}</a> {{if .Minor}}<span class="badge">minor</span>{{end}}</td>
+    <td>{{.Username}}</td>
+    <td>{{if .Summary}}{{.Summary}}{{else}}<span class="muted">No summary</span>{{end}}</td>
+    <td><a href="/revision/{{.ID}}">view</a> · <a href="/diff/{{.ID}}">diff</a></td>
+  </tr>
+  {{end}}
+</table>
+{{end}}{{template "base" .}}

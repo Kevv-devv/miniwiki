@@ -1,0 +1,28 @@
+# Private wiki data
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+/uploads/
+/backups/
+/config.toml
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# Build artifacts
+/dist/
+/release/
+/release-stage/
+/miniwiki
+/miniwiki.exe
+
+# Runtime files
+*.lock
+*.log
+
+# Local Go workspace
+go.work
+go.work.sum

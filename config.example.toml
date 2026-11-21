@@ -1,0 +1,48 @@
+# MiniWiki configuration
+# Environment variables override this file.
+# MiniWiki v24 rejects unknown keys, invalid boolean values, and keep_last <= 0.
+# Use true/false for safety-critical flags; typos will prevent startup.
+
+addr = ":8080"
+db_path = "wiki.db"
+site_name = "MiniWiki"
+
+# Set true when MiniWiki is behind HTTPS.
+# Leave false for plain localhost/LAN HTTP testing.
+secure_cookies = false
+
+# Ignore X-Forwarded-For unless the TCP peer is explicitly trusted.
+# For a local reverse proxy (Caddy/nginx on the same host), use:
+# trusted_proxies = "127.0.0.1/32, ::1/128"
+# Never add untrusted networks or 0.0.0.0/0.
+# IMPORTANT: request throttling and concurrent file-download limits operate
+# per client IP. Without trusted_proxies, visitors behind a reverse proxy all
+# share the proxy's address, potentially triggering limits on busy wiki pages.
+# Only configure proxies you actually control and that sanitize XFF headers.
+trusted_proxies = ""
+
+# Require authentication for all wiki content, history, images and search.
+# Strongly recommended for private team or research wikis.
+require_login = false
+
+# v12 options
+upload_dir = "uploads"
+base_url = "http://localhost:8080"
+
+# Optional SMTP settings for password reset email.
+# If SMTP is blank, reset links are logged only when dev_mode=true.
+# Never enable dev_mode on public instances.
+smtp_host = ""
+smtp_port = "587"
+smtp_username = ""
+smtp_password = ""
+smtp_from = ""
+dev_mode = false
+
+# MiniWiki v22 scheduled online backups (disabled by default):
+# Each backup is a SQLite-consistent wiki.db plus immutable uploads/.
+# Backup directories contain sensitive passwords and wiki content; restrict access.
+backup_dir = "backups"
+# Set to "24h" to enable automated backups; empty disables them.
+backup_every = ""
+keep_last = 7  # must be a positive integer

@@ -1,0 +1,10 @@
+{{define "content"}}
+<h1>Undelete {{.Page.Title}}</h1>
+<p>This will restore the page at <code>/wiki/{{.Page.Slug}}</code>.</p>
+<form method="post" class="edit-form narrow">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <label>Summary <input name="summary" value="Undeleted page"></label>
+  <button class="button primary" type="submit">Undelete page</button>
+  <a class="button" href="/wiki/{{.Page.Slug}}/deleted">Cancel</a>
+</form>
+{{end}}{{template "base" .}}

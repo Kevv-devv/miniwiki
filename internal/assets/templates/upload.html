@@ -1,0 +1,39 @@
+{{define "content"}}
+<div class="page-header">
+  <div>
+    <h1>Uploads</h1>
+    <p class="muted">Upload images and files. Use [[Image:filename.png]] to embed an image inline; use [[filename.png]] to link to the uploaded file without embedding it.</p>
+  </div>
+</div>
+<form method="post" enctype="multipart/form-data" class="edit-form upload-form" data-upload-form>
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <label class="drop-zone" data-drop-zone>
+    <span class="drop-title">Drop a file here or click to choose</span>
+    <span class="muted" data-drop-name>Images can be embedded directly. Other files are served as downloads.</span>
+    <input type="file" name="file" required data-file-input>
+  </label>
+  <div class="form-actions"><button class="button primary" type="submit">Upload file</button></div>
+</form>
+<h2>Recent uploads</h2>
+{{if .Uploads}}
+<div class="upload-grid">{{range .Uploads}}
+  <article class="upload-card">
+    {{if .IsImage}}<a href="/uploads/{{.StoredName}}"><img src="/uploads/{{.StoredName}}" alt="{{.Filename}}"></a>{{else}}<div class="file-icon">↧</div>{{end}}
+    <h3><a href="/uploads/{{.StoredName}}">{{.Filename}}</a></h3>
+    <p class="muted">{{.Size}} bytes · uploaded by {{.Username}}</p>
+    <label>Wiki syntax
+      <input readonly value="{{if .IsImage}}[[Image:{{.Filename}}]]{{else}}[[{{.Filename}}]]{{end}}">
+    </label>
+    <form method="post" action="/upload/{{.ID}}/rename" class="inline-form">
+      <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+      <input name="filename" value="{{.Filename}}">
+      <button class="button compact">Rename</button>
+    </form>
+    {{if and $.User (eq $.User.Role "admin")}}
+    <form method="post" action="/upload/{{.ID}}/protect" class="inline-form"><input type="hidden" name="csrf_token" value="{{$.CSRFToken}}"><input type="hidden" name="protected" value="{{if .Protected}}0{{else}}1{{end}}"><button class="button compact">{{if .Protected}}Unprotect{{else}}Protect{{end}}</button></form>
+    <form method="post" action="/upload/{{.ID}}/delete" class="inline-form"><input type="hidden" name="csrf_token" value="{{$.CSRFToken}}"><button class="button compact danger">Delete</button></form>
+    {{end}}
+  </article>
+{{end}}</div>
+{{else}}<div class="empty-state"><strong>No uploads yet.</strong><br>Upload an image or file and MiniWiki will give you a copy-paste Markdown snippet.</div>{{end}}
+{{end}}{{template "base" .}}

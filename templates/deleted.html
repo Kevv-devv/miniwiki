@@ -1,0 +1,15 @@
+{{define "content"}}
+<h1>Deleted content</h1>
+<h2>Deleted pages</h2>
+{{if .DeletedPages}}
+<table><tr><th>Title</th><th>Slug</th><th>Deleted</th><th>Actions</th></tr>{{range .DeletedPages}}
+<tr><td>{{.Title}}</td><td>{{.Slug}}</td><td>{{.DeletedAt.Time}}</td><td><a href="/wiki/{{.Slug}}/deleted">View deleted</a> · <a href="/wiki/{{.Slug}}/undelete">Undelete</a></td></tr>
+{{end}}</table>
+{{else}}<p class="muted">No deleted pages.</p>{{end}}
+<h2>Deleted images/files</h2>
+{{if .Uploads}}
+<table><tr><th>File</th><th>Stored file</th><th>Deleted</th><th>Actions</th></tr>{{range .Uploads}}
+<tr><td>{{.Filename}}</td><td>{{.StoredName}}</td><td>{{.DeletedAt.Time}}</td><td><a href="/upload/{{.ID}}/deleted">View deleted</a> <form method="post" action="/upload/{{.ID}}/undelete" class="inline-form"><input type="hidden" name="csrf_token" value="{{$.CSRFToken}}"><button class="button compact">Undelete</button></form></td></tr>
+{{end}}</table>
+{{else}}<p class="muted">No deleted uploads.</p>{{end}}
+{{end}}{{template "base" .}}

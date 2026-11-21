@@ -1,0 +1,21 @@
+{{define "content"}}
+<h1>Deleted file: {{.Upload.Filename}}</h1>
+<p class="muted">Admins can inspect this deleted file without undeleting it.</p>
+<section class="card">
+  {{if .Upload.IsImage}}<p><img class="wiki-image" src="/deleted-upload/{{.Upload.ID}}" alt="{{.Upload.Filename}}"></p>{{end}}
+  <table>
+    <tr><th>Original filename</th><td>{{.Upload.Filename}}</td></tr>
+    <tr><th>Stored filename</th><td>{{.Upload.StoredName}}</td></tr>
+    <tr><th>Content type</th><td>{{.Upload.ContentType}}</td></tr>
+    <tr><th>Size</th><td>{{.Upload.Size}} bytes</td></tr>
+    <tr><th>Protected</th><td>{{if .Upload.Protected}}yes{{else}}no{{end}}</td></tr>
+    <tr><th>Deleted</th><td>{{.Upload.DeletedAt.Time}}</td></tr>
+  </table>
+  <p><a class="button" href="/deleted-upload/{{.Upload.ID}}">Open deleted file</a></p>
+  <form method="post" action="/upload/{{.Upload.ID}}/undelete" class="inline-form">
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+    <button class="button primary">Undelete file</button>
+  </form>
+  <a class="button neutral" href="/deleted/pages">Back to deleted content</a>
+</section>
+{{end}}{{template "base" .}}

@@ -1,0 +1,6 @@
+{{define "content"}}
+<h1>Watchlist</h1>
+{{if .Watchlist}}
+<ul class="page-list">{{range .Watchlist}}<li><a href="/wiki/{{.Slug}}">{{.Title}}</a> <span class="muted">updated {{.UpdatedAt}}</span></li>{{end}}</ul>
+{{else}}<p>You are not watching any pages yet.</p>{{end}}
+{{end}}

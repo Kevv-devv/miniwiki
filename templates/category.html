@@ -1,0 +1,4 @@
+{{define "content"}}
+<h1>Category: {{.Category.Name}}</h1>
+{{if .Pages}}<ul class="page-list">{{range .Pages}}<li><a href="/wiki/{{.Slug}}">{{.Title}}</a></li>{{end}}</ul>{{else}}<p>No pages in this category yet.</p>{{end}}
+{{end}}{{template "base" .}}

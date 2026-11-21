@@ -1,0 +1,30 @@
+{{define "content"}}
+<h1>Users</h1>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<table>
+  <tr><th>User</th><th>User page</th><th>User talk</th><th>Email</th><th>Role</th><th>Status</th><th>Change role</th><th>Block</th><th>Reset password</th><th>CheckUser</th></tr>
+  {{range .Users}}
+  <tr>
+    <td>{{.Username}}</td>
+    <td><a href="/wiki/User:{{.Username}}">User:{{.Username}}</a></td>
+    <td><a href="/wiki/User-talk:{{.Username}}">User talk:{{.Username}}</a></td>
+    <td>{{.Email}}</td>
+    <td><span class="badge">{{.Role}}</span></td>
+    <td>{{if .Blocked}}<span class="badge danger">blocked</span>{{else}}active{{end}}</td>
+    <td><form method="post" action="/user/{{.ID}}/role" class="inline-form"><input type="hidden" name="csrf_token" value="{{$.CSRFToken}}"><select name="role"><option value="reader">reader</option><option value="editor">editor</option><option value="admin">admin</option></select><button class="button compact">Update</button></form></td>
+    <td><form method="post" action="/user/{{.ID}}/block" class="inline-form"><input type="hidden" name="csrf_token" value="{{$.CSRFToken}}"><input type="hidden" name="blocked" value="{{if .Blocked}}0{{else}}1{{end}}"><button class="button compact">{{if .Blocked}}Unblock{{else}}Block{{end}}</button></form></td>
+    <td><a class="button compact" href="/user/{{.ID}}/password">Reset password…</a></td>
+    <td><a href="/checkuser?username={{.Username}}">Check</a></td>
+  </tr>
+  {{end}}
+</table>
+<h2>Create user</h2>
+<form method="post" class="edit-form narrow">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <label>Username <input name="username"></label>
+  <label>Email <input name="email" type="email"></label>
+  <label>Password <input name="password" type="password"></label>
+  <label>Role <select name="role"><option value="editor">editor</option><option value="reader">reader</option><option value="admin">admin</option></select></label>
+  <button class="button primary" type="submit">Create user</button>
+</form>
+{{end}}{{template "base" .}}

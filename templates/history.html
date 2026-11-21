@@ -1,0 +1,19 @@
+{{define "content"}}
+<h1>History: <a href="/wiki/{{.Page.Slug}}">{{.Page.Title}}</a></h1>
+<form method="get" action="/compare" class="compare-form">
+<table>
+  <tr><th>Compare</th><th>When</th><th>Revision</th><th>User</th><th>Summary</th><th>Actions</th></tr>
+  {{range .Revisions}}
+  <tr>
+    <td><label><input type="radio" name="from" value="{{.ID}}"> from</label> <label><input type="radio" name="to" value="{{.ID}}"> to</label></td>
+    <td>{{.CreatedAt}}</td>
+    <td>#{{.ID}} {{if .Minor}}<span class="badge">minor</span>{{end}}</td>
+    <td>{{.Username}}</td>
+    <td>{{if .Summary}}{{.Summary}}{{else}}<span class="muted">No summary</span>{{end}}</td>
+    <td><a href="/revision/{{.ID}}">view</a> · <a href="/diff/{{.ID}}">diff previous</a> · <a href="/restore/{{.ID}}">restore</a></td>
+  </tr>
+  {{end}}
+</table>
+<p><button class="button secondary" type="submit">Compare selected revisions</button></p>
+</form>
+{{end}}{{template "base" .}}

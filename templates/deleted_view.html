@@ -1,0 +1,8 @@
+{{define "content"}}
+<div class="toolbar page-tabs"><a href="/deleted/pages">Deleted content</a><a href="/wiki/{{.Page.Slug}}/undelete">Undelete</a></div>
+<article class="article-card">
+  <p class="error">This page is deleted. You are viewing it as an admin.</p>
+  <h1>{{.Page.Title}}</h1>
+  <div class="wiki-body">{{.HTML}}</div>
+</article>
+{{end}}{{template "base" .}}

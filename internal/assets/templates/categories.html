@@ -1,0 +1,5 @@
+{{define "content"}}
+<h1>Categories</h1>
+<p class="muted">Add categories to a page with <code>[[Category:Statistics]]</code>.</p>
+{{if .Categories}}<ul class="page-list">{{range .Categories}}<li><a href="/category/{{.Slug}}">{{.Name}}</a><span class="muted"> {{.PageCount}} page(s)</span></li>{{end}}</ul>{{else}}<p>No categories yet.</p>{{end}}
+{{end}}{{template "base" .}}

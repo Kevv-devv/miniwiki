@@ -1,0 +1,23 @@
+[Unit]
+Description=MiniWiki self-hosted wiki
+After=network.target
+
+[Service]
+Type=simple
+User=miniwiki
+Group=miniwiki
+WorkingDirectory=/opt/miniwiki
+ExecStart=/opt/miniwiki/miniwiki serve -config /etc/miniwiki/config.toml
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+PrivateDevices=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryDenyWriteExecute=true
+ProtectHome=true
+ReadWritePaths=/opt/miniwiki /var/lib/miniwiki
+
+[Install]
+WantedBy=multi-user.target

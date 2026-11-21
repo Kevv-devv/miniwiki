@@ -1,0 +1,37 @@
+{{define "content"}}
+<div class="page-header">
+  <div>
+    <h1>User settings</h1>
+    <p class="muted">Manage your email, password, and personal wiki links.</p>
+  </div>
+</div>
+{{if .Message}}<p class="notice">{{.Message}}</p>{{end}}
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<section class="admin-grid">
+  <article class="card">
+    <h2>Profile</h2>
+    <p><a href="/wiki/User:{{.User.Username}}">User:{{.User.Username}}</a></p>
+    <p><a href="/wiki/User-talk:{{.User.Username}}">User talk:{{.User.Username}}</a></p>
+  </article>
+  <article class="card">
+    <h2>Watchlist</h2>
+    <p>Track changes to pages you care about.</p>
+    <p><a class="button" href="/watchlist">Open watchlist</a></p>
+  </article>
+</section>
+<form method="post" class="edit-form narrow settings-form">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <fieldset>
+    <legend>Email</legend>
+    <label>Email address <input type="email" name="email" value="{{.Email}}" placeholder="optional"></label>
+  </fieldset>
+  <fieldset>
+    <legend>Password</legend>
+    <p class="muted">Leave these fields blank to keep your current password.</p>
+    <label>Current password <input type="password" name="current_password" autocomplete="current-password"></label>
+    <p class="muted">Your current password is required to change either your email address or your password.</p>
+    <label>New password <input type="password" name="new_password" minlength="8" autocomplete="new-password"></label>
+  </fieldset>
+  <div class="form-actions"><button class="button primary" type="submit">Save settings</button></div>
+</form>
+{{end}}{{template "base" .}}

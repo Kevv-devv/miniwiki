@@ -1,0 +1,31 @@
+{{define "base"}}
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Title}} - {{.SiteName}}</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-row">
+      <a class="brand" href="/wiki/main-page">{{.SiteName}}</a>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Toggle navigation">☰</button>
+    </div>
+    <nav class="topnav" data-nav-menu>
+      <a href="/recent">Recent</a>
+      <a href="/pages">All Pages</a>
+      <a href="/categories">Categories</a>
+      <a href="/upload">Uploads</a>
+      <a href="/search">Search</a>
+      {{if and .User (eq .User.Role "admin")}}<a href="/admin">Admin</a>{{end}}
+      {{if .User}}<a href="/watchlist">Watchlist</a><a href="/account" class="user-pill">{{.User.Username}}</a><form method="post" action="/logout" class="inline-form"><input type="hidden" name="csrf_token" value="{{.CSRFToken}}"><button class="nav-logout" type="submit">Logout</button></form>{{else}}<a href="/login">Login</a>{{end}}
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">◐</button>
+    </nav>
+  </header>
+  <main>{{template "content" .}}</main>
+</body>
+</html>
+{{end}}

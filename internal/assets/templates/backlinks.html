@@ -1,0 +1,5 @@
+{{define "content"}}
+<div class="toolbar"><a href="/wiki/{{.Page.Slug}}">Page</a><a href="/wiki/{{.Page.Slug}}/edit">Edit</a><a href="/wiki/{{.Page.Slug}}/history">History</a></div>
+<h1>Backlinks to {{.Page.Title}}</h1>
+{{if .Backlinks}}<ul class="page-list">{{range .Backlinks}}<li><a href="/wiki/{{.Slug}}">{{.Title}}</a></li>{{end}}</ul>{{else}}<p>No pages link here yet.</p>{{end}}
+{{end}}{{template "base" .}}

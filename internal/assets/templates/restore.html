@@ -1,0 +1,12 @@
+{{define "content"}}
+<h1>Restore revision #{{.Revision.ID}}</h1>
+<p class="muted">This will make revision #{{.Revision.ID}} the current version of <a href="/wiki/{{.Revision.Slug}}">{{.Revision.Title}}</a>. A new revision will be created.</p>
+<form method="post" class="edit-form">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <label>Restore summary <input name="summary" value="Restored revision #{{.Revision.ID}}"></label>
+  <div class="form-actions">
+    <button class="button primary" type="submit">Restore revision</button>
+    <a class="button neutral" href="/wiki/{{.Revision.Slug}}/history">Cancel</a>
+  </div>
+</form>
+{{end}}{{template "base" .}}

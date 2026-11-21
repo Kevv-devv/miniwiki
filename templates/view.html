@@ -1,0 +1,21 @@
+{{define "content"}}
+<div class="toolbar page-tabs"><a href="/wiki/{{.Page.Slug}}/edit">Edit</a>{{if and .User (eq .User.Role "admin")}}<a href="/wiki/{{.Page.Slug}}/rename">Rename</a>{{end}}<a href="/wiki/{{.Page.Slug}}/history">History</a><a href="/wiki/{{.Page.Slug}}/backlinks">Backlinks</a><a href="/wiki/{{.Page.Slug}}/raw">Raw</a>{{if .Page.Protected}}<span class="badge">protected</span>{{end}}</div>
+
+<div class="page-actions-row">
+{{if .User}}<form method="post" action="/wiki/{{.Page.Slug}}/watch" class="inline-form"><input type="hidden" name="csrf_token" value="{{.CSRFToken}}"><input type="hidden" name="watch" value="{{if .Watched}}0{{else}}1{{end}}"><button class="button compact" type="submit">{{if .Watched}}Unwatch{{else}}Watch{{end}}</button></form>{{end}}
+{{if and .User (eq .User.Role "admin")}}<form method="post" action="/wiki/{{.Page.Slug}}/protect" class="inline-form"><input type="hidden" name="csrf_token" value="{{.CSRFToken}}"><input type="hidden" name="protected" value="{{if .Page.Protected}}0{{else}}1{{end}}">{{if not .Page.Protected}}<label class="muted" title="Apply protection to all images embedded on this page"><input type="checkbox" name="protect_embedded_files" value="1"> Protect embedded files too</label>{{end}}<button class="button compact" type="submit">{{if .Page.Protected}}Unprotect{{else}}Protect{{end}}</button></form><a class="button compact danger" href="/wiki/{{.Page.Slug}}/delete">Delete</a>{{end}}
+</div>
+
+<div class="article-layout">
+  <aside class="toc-card" data-toc hidden>
+    <strong>Contents</strong>
+    <nav data-toc-list></nav>
+  </aside>
+  <article class="article-card">
+    {{if .RedirectedFrom}}<p class="notice">Redirected from <a href="/wiki/{{.RedirectedFrom}}?redirect=no">{{.RedirectedFrom}}</a>.</p>{{end}}
+    <h1>{{.Page.Title}}</h1>
+    <div class="wiki-body" data-wiki-body>{{.HTML}}</div>
+    {{if .Categories}}<div class="category-box"><strong>Categories:</strong> {{range .Categories}}<a href="/category/{{.Slug}}">{{.Name}}</a> {{end}}</div>{{end}}
+  </article>
+</div>
+{{end}}{{template "base" .}}

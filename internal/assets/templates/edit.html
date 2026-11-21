@@ -1,0 +1,78 @@
+{{define "content"}}
+<div class="page-header">
+  <div>
+    <h1>Edit {{.Page.Title}}</h1>
+    <p class="muted">Use Markdown for formatting, <code>[[Page Name]]</code> for wiki links, and <code>[[Category:Name]]</code> to categorize a page. Use <code>[[Image:filename.png]]</code> to embed an uploaded image inline. Use <code>[[filename.png]]</code> to link to the uploaded file without embedding it.</p>
+  </div>
+</div>
+
+{{if .Preview}}
+<section class="preview-box">
+  <h2>Server Preview</h2>
+  <p class="muted">This is only a preview. Your changes are not saved yet.</p>
+  <div class="wiki-body">{{.HTML}}</div>
+</section>
+{{end}}
+
+{{if .Error}}<p role="alert" class="error">{{.Error}}</p>{{end}}
+<form method="post" class="edit-form" data-editor-form>
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <input type="hidden" name="base_revision_id" value="{{.BaseRevisionID}}">
+  <label>Title
+    <input name="title" value="{{.Page.Title}}">
+  </label>
+
+  <div class="editor-shell">
+    <section class="editor-pane">
+      <label for="content-editor">Content</label>
+      <div class="editor-toolbar" aria-label="Editor toolbar">
+        <button type="button" data-md="bold"><strong>B</strong></button>
+        <button type="button" data-md="italic"><em>I</em></button>
+        <button type="button" data-md="heading">Heading</button>
+        <button type="button" data-md="link">Link</button>
+        <button type="button" data-md="image">Image</button>
+        <button type="button" data-md="wikilink">Wiki Link</button>
+        <button type="button" data-md="category">Category</button>
+        <button type="button" data-md="quote">Quote</button>
+        <button type="button" data-md="code">Code</button>
+      </div>
+      <textarea id="content-editor" name="content" rows="26" data-editor>{{.Page.Content}}</textarea>
+      <p class="muted editor-count"><span data-word-count>0</span> words · <span data-char-count>0</span> characters</p>
+    </section>
+
+    <aside class="editor-preview-pane">
+      <div class="preview-heading">
+        <h2>Live Preview</h2>
+        <span class="badge">draft</span>
+      </div>
+      <div class="wiki-body live-preview" data-live-preview></div>
+      <p class="muted">Live preview is approximate. Use the Preview button for the server-rendered version.</p>
+    </aside>
+  </div>
+
+  <label>Edit summary
+    <input name="summary" value="{{.Summary}}" placeholder="Briefly describe what changed" list="summary-suggestions">
+  </label>
+  <datalist id="summary-suggestions">
+    <option value="Created page">
+    <option value="Expanded content">
+    <option value="Fixed typo">
+    <option value="Corrected formatting">
+    <option value="Added sources">
+    <option value="Updated information">
+    <option value="Added image">
+    <option value="Reorganized section">
+    <option value="Minor cleanup">
+  </datalist>
+
+  <label class="checkline">
+    <input type="checkbox" name="minor" {{if .Minor}}checked{{end}}> Minor edit
+  </label>
+
+  <div class="form-actions sticky-actions">
+    <button class="button primary" type="submit" name="action" value="save">Save page</button>
+    <button class="button secondary" type="submit" name="action" value="preview">Preview</button>
+    <a class="button neutral" href="/wiki/{{.Page.Slug}}">Cancel</a>
+  </div>
+</form>
+{{end}}{{template "base" .}}

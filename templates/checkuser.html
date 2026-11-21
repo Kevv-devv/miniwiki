@@ -1,0 +1,11 @@
+{{define "content"}}
+<h1>CheckUser</h1>
+<p class="muted">Admin-only view of account activity and recorded IPs from the audit log.</p>
+<form method="get" class="inline-form"><input name="username" value="{{.Query}}" placeholder="username"><button class="button compact">Check</button></form>
+{{if .Query}}{{if .TargetUser}}
+<h2>{{.TargetUser.Username}}</h2>
+<p>Role: <span class="badge">{{.TargetUser.Role}}</span> · Status: {{if .TargetUser.Blocked}}<span class="badge danger">blocked</span>{{else}}active{{end}} · Email: {{.TargetUser.Email}}</p>
+<h3>Recent activity</h3>
+{{if .AuditEvents}}<table><tr><th>When</th><th>Actor</th><th>Event</th><th>Target</th><th>IP</th><th>Detail</th></tr>{{range .AuditEvents}}<tr><td>{{.CreatedAt}}</td><td>{{.ActorUsername}}</td><td>{{.EventType}}</td><td>{{.TargetType}}: {{.Target}}</td><td>{{.IP}}</td><td>{{.Detail}}</td></tr>{{end}}</table>{{else}}<p class="muted">No audit events found for this user.</p>{{end}}
+{{else}}<p class="error">No user found.</p>{{end}}{{end}}
+{{end}}{{template "base" .}}

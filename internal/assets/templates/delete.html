@@ -1,0 +1,15 @@
+{{define "content"}}
+<h1>Delete {{.Page.Title}}</h1>
+<p class="warning">This will permanently delete the page, its revisions, category links, search index entry, and watchlist entries.</p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<form method="post" class="form-card">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <label>Type <strong>delete</strong> to confirm
+    <input name="confirm" autocomplete="off">
+  </label>
+  <div class="button-row">
+    <button class="button danger" type="submit">Delete page</button>
+    <a class="button secondary" href="/wiki/{{.Page.Slug}}">Cancel</a>
+  </div>
+</form>
+{{end}}{{template "base" .}}

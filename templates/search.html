@@ -1,0 +1,17 @@
+{{define "content"}}
+<div class="page-header"><div><h1>Search</h1><p class="muted">Search page titles and content. Press <kbd>/</kbd> from most pages to jump here.</p></div></div>
+<form method="get" class="search"><input name="q" value="{{.Query}}" placeholder="Search pages"><button>Search</button></form>
+{{if .Query}}
+  <h2>Results for {{.Query}}</h2>
+  {{if not .PageExists}}
+    <p><a class="redlink" href="/wiki/{{.CreateSlug}}/edit">Create the page “{{.CreateTitle}}”</a></p>
+  {{end}}
+  {{if .Results}}
+    {{range .Results}}<div class="result"><h3><a href="/wiki/{{.Slug}}">{{.Title}}</a></h3><p>{{snippetHTML .Snippet}}</p><p class="muted">Updated {{.UpdatedAt}}</p></div>{{end}}
+  {{else}}
+    <div class="empty-state"><strong>No results for {{.Query}}.</strong><br><a class="redlink" href="/wiki/{{.CreateSlug}}/edit">Create this page now.</a></div>
+  {{end}}
+{{else}}
+  <div class="empty-state"><strong>Search your wiki.</strong><br>Results include page titles and body text.</div>
+{{end}}
+{{end}}{{template "base" .}}

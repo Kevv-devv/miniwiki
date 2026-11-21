@@ -1,0 +1,5 @@
+{{define "content"}}
+<h1>Compare revisions: <a href="/wiki/{{.CompareTo.Slug}}">{{.CompareTo.Title}}</a></h1>
+<p class="muted">Comparing #{{.CompareFrom.ID}} by {{.CompareFrom.Username}} to #{{.CompareTo.ID}} by {{.CompareTo.Username}}.</p>
+<pre class="diff">{{range .Diff}}<span class="{{.Kind}}">{{if eq .Kind "add"}}+ {{else if eq .Kind "del"}}- {{else}}  {{end}}{{.Text}}</span>{{end}}</pre>
+{{end}}{{template "base" .}}

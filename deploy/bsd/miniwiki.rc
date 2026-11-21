@@ -1,0 +1,22 @@
+#!/bin/sh
+# PROVIDE: miniwiki
+# REQUIRE: NETWORKING
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="miniwiki"
+rcvar="miniwiki_enable"
+
+: ${miniwiki_enable:="NO"}
+: ${miniwiki_user:="miniwiki"}
+: ${miniwiki_dir:="/usr/local/miniwiki"}
+: ${miniwiki_config:="/usr/local/etc/miniwiki/config.toml"}
+
+command="${miniwiki_dir}/miniwiki"
+command_args="serve -config ${miniwiki_config}"
+procname="${command}"
+pidfile="/var/run/${name}.pid"
+
+load_rc_config $name
+run_rc_command "$1"

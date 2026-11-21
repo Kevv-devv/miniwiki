@@ -1,0 +1,10 @@
+{{define "content"}}
+<h1>Revision of <a href="/wiki/{{.Revision.Slug}}">{{.Revision.Title}}</a></h1>
+<p class="muted">
+  Revision #{{.Revision.ID}} by {{.Revision.Username}} on {{.Revision.CreatedAt}}.
+  {{if .Revision.Minor}}<span class="badge">minor</span>{{end}}
+  {{if .Revision.Summary}} Summary: {{.Revision.Summary}}{{end}}
+</p>
+<div class="toolbar"><a href="/wiki/{{.Revision.Slug}}">Current page</a><a href="/diff/{{.Revision.ID}}">Diff</a><a href="/wiki/{{.Revision.Slug}}/history">History</a><a href="/restore/{{.Revision.ID}}">Restore</a></div>
+<div class="wiki-body">{{.HTML}}</div>
+{{end}}{{template "base" .}}

@@ -1,0 +1,26 @@
+{{define "content"}}
+<div class="page-header">
+  <div>
+    <h1>Rename {{.Page.Title}}</h1>
+    <p class="muted">Rename the page and keep a redirect from the old address so existing links do not break.</p>
+  </div>
+</div>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<form method="post" class="edit-form">
+  <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+  <label>New title
+    <input name="title" value="{{.NewTitle}}" required>
+  </label>
+  <label>New slug
+    <input name="slug" value="{{.NewSlug}}" required>
+  </label>
+  <p class="muted">Old page: <code>/wiki/{{.Page.Slug}}</code>. A redirect will point old links to the new page.</p>
+  <label>Edit summary
+    <input name="summary" value="{{.Summary}}" placeholder="Renamed page">
+  </label>
+  <div class="form-actions">
+    <button class="button primary" type="submit">Rename page</button>
+    <a class="button neutral" href="/wiki/{{.Page.Slug}}">Cancel</a>
+  </div>
+</form>
+{{end}}{{template "base" .}}

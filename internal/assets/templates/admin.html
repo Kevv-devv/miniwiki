@@ -1,0 +1,21 @@
+{{define "content"}}
+<div class="page-header"><div><h1>Admin</h1><p class="muted">One place for account, moderation, deletion, and audit tools.</p></div></div>
+<section class="admin-grid">
+  <article class="card"><h2>User management</h2><p>Create users, change roles, block/unblock accounts, reset passwords, and open user pages.</p><p><a class="button primary" href="/users">Manage users</a></p></article>
+  <article class="card"><h2>CheckUser</h2><p>Review login/edit/audit activity for an account.</p><p><a class="button" href="/checkuser">Open CheckUser</a></p></article>
+  <article class="card"><h2>Deleted pages</h2><p>{{len .DeletedPages}} deleted page(s) can be viewed or undeleted by admins.</p><p><a class="button" href="/deleted/pages">Review deleted pages</a></p></article>
+  <article class="card"><h2>Uploads and images</h2><p>Upload, rename, delete, undelete, protect, and unprotect image/file records.</p><p><a class="button" href="/upload">Manage uploads</a></p></article>
+</section>
+<section class="card"><h2>Scheduled backups</h2><p>{{.BackupStatus}}</p><p class="muted">Automatic snapshots are kept separately from manual backups. Review the server logs after any failure.</p></section>
+<h2>Quick user links</h2>
+<table><tr><th>User</th><th>User page</th><th>User talk</th><th>Status</th><th>Role</th></tr>{{range .Users}}<tr><td>{{.Username}}</td><td><a href="/wiki/User:{{.Username}}">User:{{.Username}}</a></td><td><a href="/wiki/User-talk:{{.Username}}">User talk:{{.Username}}</a></td><td>{{if .Blocked}}blocked{{else}}active{{end}}</td><td>{{.Role}}</td></tr>{{end}}</table>
+<section class="card" aria-labelledby="audit-heading">
+  <h2 id="audit-heading">Recent audit activity</h2>
+  <p class="muted">The 50 most recent events. Visible to admins only; IP addresses are sensitive.</p>
+  {{if .AuditEvents}}
+  <div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Event</th><th>Target</th><th>Details</th><th>IP</th></tr></thead><tbody>
+  {{range .AuditEvents}}<tr><td>{{.CreatedAt}}</td><td>{{if .ActorUsername}}{{.ActorUsername}}{{else}}(anonymous){{end}}</td><td>{{.EventType}}</td><td>{{.TargetType}}: {{.Target}}</td><td>{{.Detail}}</td><td>{{.IP}}</td></tr>{{end}}
+  </tbody></table></div>
+  {{else}}<p>No audit events yet.</p>{{end}}
+</section>
+{{end}}{{template "base" .}}

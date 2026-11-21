@@ -1,0 +1,7 @@
+{{define "content"}}
+<article class="article-card">
+  <h1>Redirect: {{.RedirectedFrom}}</h1>
+  <p>This title was renamed. It redirects to <a href="/wiki/{{.NewSlug}}">{{.NewSlug}}</a>.</p>
+  <p><a href="/wiki/{{.RedirectedFrom}}">Follow redirect</a></p>
+</article>
+{{end}}{{template "base" .}}

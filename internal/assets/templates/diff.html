@@ -1,0 +1,9 @@
+{{define "content"}}
+<h1>Diff: <a href="/wiki/{{.Revision.Slug}}">{{.Revision.Title}}</a></h1>
+<p class="muted">
+  Revision #{{.Revision.ID}} by {{.Revision.Username}} on {{.Revision.CreatedAt}}.
+  {{if .Revision.Summary}}Summary: {{.Revision.Summary}}.{{end}}
+</p>
+{{if .Prev}}<p class="muted">Comparing previous revision #{{.Prev.ID}} to #{{.Revision.ID}}.</p>{{end}}
+<pre class="diff">{{range .Diff}}<span class="{{.Kind}}">{{if eq .Kind "add"}}+ {{else if eq .Kind "del"}}- {{else}}  {{end}}{{.Text}}</span>{{end}}</pre>
+{{end}}{{template "base" .}}
