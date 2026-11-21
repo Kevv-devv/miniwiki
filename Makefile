@@ -35,7 +35,6 @@ release:
 	GOOS=openbsd GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o $(DIST)/$(APP)-openbsd-amd64 $(CMD)
 	GOOS=openbsd GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o $(DIST)/$(APP)-openbsd-arm64 $(CMD)
 	GOOS=netbsd  GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o $(DIST)/$(APP)-netbsd-amd64 $(CMD)
-	GOOS=netbsd  GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o $(DIST)/$(APP)-netbsd-arm64 $(CMD)
 
 clean:
 	rm -rf $(DIST)
