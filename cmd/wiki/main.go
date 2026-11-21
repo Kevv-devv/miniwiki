@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -25,7 +26,7 @@ import (
 	"miniwiki/internal/storage"
 )
 
-var version = "0.24.2-beta"
+var version = "0.24.3-beta"
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -269,11 +270,7 @@ func serve(args []string) error {
 
 	log.Printf("MiniWiki %s", version)
 	log.Printf("Database: %s", cfg.DBPath)
-	if *tlsCert != "" {
-		log.Printf("Listening with TLS on %s", cfg.Addr)
-	} else {
-		log.Printf("Listening: http://localhost%s", cfg.Addr)
-	}
+	log.Printf("Listening: %s (bind: %s)", displayListenURL(cfg.Addr, *tlsCert != ""), cfg.Addr)
 	server := &http.Server{Addr: cfg.Addr, Handler: app.Routes(), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 30 * time.Second, WriteTimeout: 60 * time.Second, IdleTimeout: 90 * time.Second, MaxHeaderBytes: 1 << 20}
 	serverErrors := make(chan error, 1)
 	go func() {
@@ -296,6 +293,24 @@ func serve(args []string) error {
 		<-serverErrors
 		return err
 	}
+}
+
+// displayListenURL returns a valid browser URL for an HTTP/TLS listener.
+// Wildcard bind addresses are shown as localhost to provide a usable local URL.
+// The real bind address is logged separately, since :8080 accepts external traffic.
+func displayListenURL(addr string, tlsEnabled bool) string {
+	host, port, err := net.SplitHostPort(addr)
+	if err != nil {
+		return addr
+	}
+	if host == "" || host == "0.0.0.0" || host == "::" {
+		host = "localhost"
+	}
+	scheme := "http"
+	if tlsEnabled {
+		scheme = "https"
+	}
+	return scheme + "://" + net.JoinHostPort(host, port)
 }
 
 func usage() {

@@ -26,3 +26,6 @@
 # Local Go workspace
 go.work
 go.work.sum
+
+# Generated, untracked release binaries and archives
+/build/

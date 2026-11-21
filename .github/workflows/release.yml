@@ -1,0 +1,128 @@
+name: Package and publish MiniWiki release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Preview package version (no GitHub Release is published)'
+        required: true
+        type: string
+        default: 'v0.24.3-beta'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-build-package:
+    name: Verify, cross-build, and package
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write # Required only for the conditional release-publishing step.
+    env:
+      RELEASE_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || inputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: 'stable'
+          cache: true
+
+      - name: Validate version and tag/source match
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$RELEASE_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z][0-9A-Za-z.-]*)?$ ]]; then
+            echo "Invalid release version: $RELEASE_VERSION" >&2
+            exit 1
+          fi
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then
+            test "$(go run -mod=readonly ./cmd/wiki version)" = "MiniWiki ${RELEASE_VERSION#v}" || {
+              echo 'Tag does not match the version declared in cmd/wiki/main.go' >&2
+              exit 1
+            }
+          fi
+
+      - name: Verify dependency integrity and tidiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s go.sum
+          go mod download
+          go mod verify
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
+
+      - name: Run race tests and static analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          go test -mod=readonly -race ./...
+          go vet -mod=readonly ./...
+
+      - name: Scan reachable vulnerabilities
+        shell: bash
+        run: |
+          set -euo pipefail
+          go install golang.org/x/vuln/cmd/govulncheck@v1.10.0
+          "$(go env GOPATH)/bin/govulncheck" ./...
+
+      - name: Build all supported platforms
+        shell: bash
+        run: bash scripts/build_release.sh "$RELEASE_VERSION" build/release
+
+      - name: Smoke test Linux binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(./build/release/miniwiki-linux-amd64 version)" = "MiniWiki ${RELEASE_VERSION#v}"
+
+      - name: Package archives and checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/package_release.py \
+            --version "$RELEASE_VERSION" \
+            --input-dir build/release \
+            --output-dir build/packages
+          (cd build/packages && sha256sum -c SHA256SUMS)
+          test "$(find build/packages -maxdepth 1 -type f | wc -l)" -eq 11
+
+      - name: Save packages as a workflow artifact (including preview runs)
+        uses: actions/upload-artifact@v4
+        with:
+          name: miniwiki-release-packages
+          path: build/packages/*
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish GitHub Release for a version tag
+        if: github.ref_type == 'tag'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_VERSION" >/dev/null 2>&1; then
+            echo "Release $RELEASE_VERSION already exists. Refusing to replace it." >&2
+            exit 1
+          fi
+          options=(--latest=false)
+          if [[ "$RELEASE_VERSION" == *-* ]]; then
+            options+=(--prerelease)
+          fi
+          gh release create "$RELEASE_VERSION" build/packages/* \
+            --title "MiniWiki $RELEASE_VERSION" \
+            --generate-notes \
+            --verify-tag \
+            "${options[@]}"
